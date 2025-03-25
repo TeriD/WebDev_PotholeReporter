@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pothole Reporting Form</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h2>Report a Pothole</h2>
+        <form id="potholeForm">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" required />
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required />
+
+            <label for="location">Location (Street Address or Description)</label>
+            <input type="text" id="location" required />
+
+            <label for="region">KYTC District</label>
+            <select id="region" required>
+                <option value="">-- Select District --</option>
+                <option value="District 1">District 1</option>
+                <option value="District 2">District 2</option>
+                <option value="District 3">District 3</option>
+                <option value="District 4">District 4</option>
+                <option value="District 5">District 5</option>
+                <option value="District 6">District 6</option>
+                <option value="District 7">District 7</option>
+                <option value="District 8">District 8</option>
+                <option value="District 9">District 9</option>
+                <option value="District 10">District 10</option>
+                <option value="District 11">District 11</option>
+                <option value="District 12">District 12</option>
+            </select>
+
+            <label for="description">Additional Details</label>
+            <textarea id="description" rows="4"></textarea>
+
+            <label>Severity</label>
+            <div class="radio-group">
+                <label><input type="radio" name="severity" value="Low" required /> Low</label>
+                <label><input type="radio" name="severity" value="Moderate" /> Moderate</label>
+                <label><input type="radio" name="severity" value="Severe" /> Severe</label>
+            </div>
+
+            <button type="submit">Submit Report</button>
+        </form>
+
+        <div id="summary"></div>
+    </div>
+
+    <script>
+        document.getElementById("potholeForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const location = document.getElementById("location").value;
+            const region = document.getElementById("region").value;
+            const description = document.getElementById("description").value;
+            const severity = document.querySelector("input[name='severity']:checked").value;
+
+            const summaryDiv = document.getElementById("summary");
+            summaryDiv.innerHTML = `
+        <h3>Report Submitted</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Location:</strong> ${location}</p>
+        <p><strong>Region:</strong> ${region}</p>
+        <p><strong>Severity:</strong> ${severity}</p>
+        <p><strong>Description:</strong> ${description || "N/A"}</p>
+      `;
+
+            // Optionally reset the form:
+            document.getElementById("potholeForm").reset();
+        });
+    </script>
+</body>
+
+</html>
