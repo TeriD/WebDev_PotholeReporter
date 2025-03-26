@@ -1,24 +1,36 @@
+
 # Pothole Reporting Form
 
-This is a simple, interactive HTML and JavaScript form designed to collect pothole reports from the public or internal users. The form allows users to enter basic contact information, describe the pothole location, rate the severity, and provide additional details. Submitted reports are summarized dynamically on the page using JavaScript.
-
-This project is ideal for local governments, DOTs, or community-driven reporting tools. It can be expanded with backend integration, location mapping, or data persistence.
+This is an interactive, responsive HTML and JavaScript-based form for reporting potholes. It supports location selection via map, dynamic county filtering, reverse geocoding, and user-friendly field validation. The form is tailored for public or internal reporting and is extensible for integration with backend databases and dashboards.
 
 ## Features
 
-- Clean, responsive design
-- JavaScript-powered form validation and summary display
-- Customizable district/region selection
-- Supports severity levels and optional descriptions
+- Clean, responsive design using Flexbox
+- JavaScript-powered form validation with inline error messaging
+- County selector with dynamic filtering
+- Map-based location picker using Leaflet.js
+- Reverse geocoding to automatically populate location from coordinates (in progress)
+- Automatic KYTC District lookup from selected county via GeoJSON
+- Image upload with preview
+- Real-time report summary display on submission
 
 ## Technologies
 
 - HTML5
-- CSS3
+- CSS3 (Flexbox)
 - Vanilla JavaScript
+- Leaflet.js
+- GeoJSON
 
-## Future Enhancements (Ideas)
+## Work in Progress
 
-- Map-based location picker (Leaflet.js or Google Maps)
-- File upload for images
-- Database or API integration for storing reports
+- 🔄 Reverse geocoding call functional but still under validation
+- 💾 Database integration not yet implemented
+- 📊 Dashboard for submitted data planned for future enhancement
+
+## Future Enhancements
+
+- Backend storage via API or SQLite/PostgreSQL
+- Dashboard for visualizing and managing submitted pothole reports
+- Email notifications or ticket creation upon submission
+- Mobile-first enhancements and accessibility improvements
