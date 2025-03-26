@@ -1,60 +1,226 @@
-/* css/style.css */
+
+/* Reset styles & base setup */
+* {
+  box-sizing: border-box;
+}
 
 body {
   font-family: Arial, sans-serif;
   background-color: #D8E4DA;
-  padding: 40px;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
 }
 
+/* Outer wrapper (white card style) */
 .container {
   background-color: white;
-  max-width: 600px;
-  margin: auto;
+  width: 100%;
+  max-width: 700px;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Section layout using flexbox */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Header with title + logo */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 0 30px;
+}
+
+.form-header h2 {
+  margin: 0;
+}
+
+.header-right .logo {
+  max-height: 60px;
+  width: auto;
+}
+
+/* Labels and inputs */
 label {
   font-weight: bold;
-  display: block;
-  margin-top: 15px;
 }
 
 input,
 select,
 textarea {
-  width: 100%;
   padding: 10px;
-  margin-top: 5px;
-  box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+}
+
+form > label:first-of-type {
+  font-weight: normal;
+  font-style: italic;
+  color: #555;
+  margin-top: 10px;
+}
+
+.hint {
+  display: block;
+  font-size: 0.9em;
+  font-style: italic;
+  color: #555;
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+.hint-inline {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.9em;
+  color: #555;
+  margin-left: 8px;
+}
+
+/* Map and preview */
+#map {
+  height: 300px;
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  position: relative; /* ensures stacking context */
+  z-index: 1;
+}
+
+#preview-container {
+  margin-top: 10px;
+  display: none;
+}
+
+#preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+/* Lat/Lon flex */
+.latlon-group,
+.county-district-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.latlon-group > div,
+.county-district-group > div {
+  flex: 1 1 48%;
+  min-width: 140px;
+}
+
+/* Dropdown */
+.county-search {
+  position: relative;
+}
+
+#county-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 150px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  z-index: 2000;
+  /* 👈 raise above map controls */
+}
+
+#county-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#county-list li:hover {
+  background-color: #eee;
+}
+
+.hidden {
+  display: none;
+}
+
+.error-message {
+  font-size: 0.85em;
+  color: red;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  display: none;
 }
 
 .radio-group {
-  margin-top: 5px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .radio-group label {
-  display: inline-block;
-  margin-right: 15px;
   font-weight: normal;
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px 20px;
   background-color: #228B22;
   color: white;
+  padding: 12px;
+  font-size: 1rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
+/* Summary Output */
 #summary {
+  display: none;
+  /* 🔒 Hide it initially */
   margin-top: 30px;
   background-color: #f0fdf0;
   padding: 20px;
   border-left: 5px solid #228B22;
+}
+
+/* Mobile tweaks */
+@media (max-width: 600px) {
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 20px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .radio-group {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 400px) {
+  .county-district-group {
+    flex-direction: column;
+  }
 }

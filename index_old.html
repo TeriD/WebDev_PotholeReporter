@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="form-header">
@@ -26,22 +28,18 @@
             <label for="email">Email Address</label>
             <input type="email" id="email" required />
 
-            <div class="county-district-group">
-            <div>
-                <label for="county">County</label>
-                <div class="county-search">
-                <input type="text" id="county" name="county" placeholder="Start typing a county..." autocomplete="off" required />
+            <label for="county">County</label>
+            <div class="county-search">
+                <input type="text" id="county" name="county" placeholder="Start typing a county..." autocomplete="off"
+                    required />
                 <ul id="county-list" class="dropdown hidden"></ul>
             </div>
 
-                        </div>
-            <div>
-                <label for="district">KYTC District</label>
-                <input type="text" id="district" readonly />
-            </div>
-        </div>
+            <label for="district">KYTC District</label>
+            <input type="text" id="district" readonly />
 
-            <label class="hint">Click on the map to populate Latitude, Longitude, and Location:</label>
+            <!-- 🗺️ Map is now right after County -->
+            <label class="hint">Click on the map to populate Latitude, Longitude, Route and Milepoint Location:</label>
             <div id="map"></div>
 
             <div class="latlon-group">
@@ -57,12 +55,12 @@
 
             <label for="location">Location (Street Address or Description)</label>
             <input type="text" id="location" required />
-            <span id=""location-error" class=""error-message"></span>
 
-            <label for="photo">Upload a Photo (optional)</label>
-            <input type="file" id="photo" accept="image/*" />
-            <div id="preview-container">
-                <img id="preview-image" src="" alt="Image Preview" />
+            <label>Severity</label>
+            <div class="radio-group">
+                <label><input type="radio" name="severity" value="Low" required /> Low</label>
+                <label><input type="radio" name="severity" value="Moderate" /> Moderate</label>
+                <label><input type="radio" name="severity" value="Severe" /> Severe</label>
             </div>
 
             <label for="description">
@@ -70,14 +68,14 @@
             </label>
             <textarea id="description" rows="4"></textarea>
 
-            <label>Severity</label>
-            <div class="radio-group">
-                <label><input type="radio" name="severity" value="Low" required checked /> Low</label>
-                <label><input type="radio" name="severity" value="Moderate" /> Moderate</label>
-                <label><input type="radio" name="severity" value="Severe" /> Severe</label>
-            </div>
-
             <button type="submit">Submit Report</button>
+
+            <!-- 📸 Photo Upload moved to bottom -->
+            <label for="photo">Upload a Photo (optional)</label>
+            <input type="file" id="photo" accept="image/*" />
+            <div id="preview-container">
+                <img id="preview-image" src="" alt="Image Preview" />
+            </div>
         </form>
 
         <div id="summary"></div>
@@ -85,4 +83,5 @@
 
     <script src="js/script.js"></script>
 </body>
+
 </html>

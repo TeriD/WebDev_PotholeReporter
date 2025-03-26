@@ -1,0 +1,10 @@
+
+.county-district-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.county-district-group > div {
+  flex: 1 1 45%;
+}
