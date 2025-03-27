@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pothole Reporting Form</title>
+  <link rel="stylesheet" href="css/style_with_spinner.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="form-header">
+      <div class="header-left">
+        <h2>Report a Pothole</h2>
+      </div>
+      <div class="header-right">
+        <img src="logos/TK-KYTC-Full-Color.jpg" alt="KYTC Logo" class="logo" />
+      </div>
+    </div>
+
+    <form id="potholeForm">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" required />
+
+      <label for="location">Location (Street Address or Description)</label>
+      <input type="text" id="location" required />
+      <span id="location-error" class="error-message"></span>
+
+      <div id="spinner" class="spinner hidden"></div>
+
+      <label for="county">County</label>
+      <div class="county-search">
+        <input type="text" id="county" name="county" placeholder="Start typing a county..." autocomplete="off" required />
+        <ul id="county-list" class="dropdown hidden"></ul>
+      </div>
+
+      <label for="district">KYTC District</label>
+      <input type="text" id="district" readonly />
+
+      <label for="photo">Upload a Photo (optional)</label>
+      <input type="file" id="photo" accept="image/*" />
+      <div id="preview-container">
+        <img id="preview-image" src="" alt="Image Preview" />
+      </div>
+
+      <label for="description">
+        Additional Details
+        <span class="hint-inline">(Please be as specific as possible.)</span>
+      </label>
+      <textarea id="description" rows="4"></textarea>
+
+      <label>Severity</label>
+      <div class="radio-group">
+        <label><input type="radio" name="severity" value="Low" checked /> Low</label>
+        <label><input type="radio" name="severity" value="Moderate" /> Moderate</label>
+        <label><input type="radio" name="severity" value="Severe" /> Severe</label>
+      </div>
+
+      <div id="map-options">
+        <p><strong>Select Location Input Method:</strong></p>
+        <button type="button" id="use-location">📍 Use My Current Location</button>
+        <button type="button" id="select-on-map">🗺️ Select from Map</button>
+      </div>
+
+      <div id="map-container" style="display: none;">
+        <p id="map-mode-label"></p>
+        <label class="hint">Click on the map below to populate Latitude and Longitude:</label>
+        <div class="latlon-group">
+          <div>
+            <label for="latitude">Latitude</label>
+            <input type="text" id="latitude" name="latitude" readonly />
+          </div>
+          <div>
+            <label for="longitude">Longitude</label>
+            <input type="text" id="longitude" name="longitude" readonly />
+          </div>
+        </div>
+        <div id="map"></div>
+      </div>
+
+      <button type="submit">Submit Report</button>
+    </form>
+
+    <div id="summary"></div>
+  </div>
+  <script src="js/script_with_location_mode.js"></script>
+</body>
+</html>
