@@ -1,112 +1,8 @@
 
-
-// --------------------------
-// New: Handle user map choice
-// --------------------------
-const mapContainer = document.getElementById("map-container");
-const mapOptions = document.getElementById("map-options");
-const mapModeLabel = document.getElementById("map-mode-label");
-
-document.getElementById("use-location").addEventListener("click", () => {
-  mapOptions.style.display = "none";
-  mapContainer.style.display = "block";
-  map.dragging.disable();
-  map.scrollWheelZoom.disable();
-  map.doubleClickZoom.disable();
-  map.boxZoom.disable();
-  map.keyboard.disable();
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        map.setView([lat, lng], 14);
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lng]).addTo(map);
-        document.getElementById('latitude').value = lat.toFixed(6);
-        document.getElementById('longitude').value = lng.toFixed(6);
-        reverseGeocode(lat, lng);
-        mapModeLabel.textContent = "📍 Using Current Location";
-      },
-      function (error) {
-        alert("Unable to access your location. Please use map selection.");
-        mapOptions.style.display = "block";
-        mapContainer.style.display = "none";
-      }
-    );
-  } else {
-    alert("Geolocation not supported.");
-  }
-});
-
-document.getElementById("select-on-map").addEventListener("click", () => {
-  mapOptions.style.display = "none";
-  mapContainer.style.display = "block";
-  map.dragging.enable();
-  map.scrollWheelZoom.enable();
-  map.doubleClickZoom.enable();
-  map.boxZoom.enable();
-  map.keyboard.enable();
-  mapModeLabel.textContent = "🗺️ Selected from Map";
-});
-
-
-// Visual confirmation message
-const mapModeLabel = document.getElementById("map-mode-label");
-const resetBtn = document.createElement("button");
-resetBtn.textContent = "🔄 Change Location Input Method";
-resetBtn.type = "button";
-resetBtn.style.marginTop = "10px";
-resetBtn.addEventListener("click", () => {
-  mapOptions.style.display = "block";
-  mapContainer.style.display = "none";
-  mapModeLabel.textContent = "";
-  if (marker) map.removeLayer(marker);
-  document.getElementById('latitude').value = '';
-  document.getElementById('longitude').value = '';
-  document.getElementById('location').value = '';
-});
-mapModeLabel.after(resetBtn);
-
-// Update 'use-location' handler with geolocation fallback
-document.getElementById("use-location").addEventListener("click", () => {
-  mapOptions.style.display = "none";
-  mapContainer.style.display = "block";
-  map.dragging.disable();
-  map.scrollWheelZoom.disable();
-  map.doubleClickZoom.disable();
-  map.boxZoom.disable();
-  map.keyboard.disable();
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        map.setView([lat, lng], 14);
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lng]).addTo(map);
-        document.getElementById('latitude').value = lat.toFixed(6);
-        document.getElementById('longitude').value = lng.toFixed(6);
-        reverseGeocode(lat, lng);
-        mapModeLabel.textContent = "📍 Using Current Location";
-      },
-      function (error) {
-        alert("Unable to access your location. You can still select from map.");
-        document.getElementById("select-on-map").click();
-      }
-    );
-  } else {
-    alert("Geolocation is not supported by your browser. Please select from map.");
-    document.getElementById("select-on-map").click();
-  }
-});
-
-
 let countiesGeoJSON;
 let counties = [];
 
+// Load counties GeoJSON with district numbers
 fetch('data/kycounties_districts.geojson')
   .then(res => res.json())
   .then(data => {
@@ -142,7 +38,69 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 map.fitBounds(kentuckyBounds);
 
-// Reverse Geocode with Spinner
+const mapContainer = document.getElementById("map-container");
+const mapOptions = document.getElementById("map-options");
+const mapModeLabel = document.getElementById("map-mode-label");
+
+const resetBtn = document.createElement("button");
+resetBtn.textContent = "🔄 Change Location Input Method";
+resetBtn.type = "button";
+resetBtn.style.marginTop = "10px";
+resetBtn.addEventListener("click", () => {
+  mapOptions.style.display = "block";
+  mapContainer.style.display = "none";
+  mapModeLabel.textContent = "";
+  if (marker) map.removeLayer(marker);
+  document.getElementById('latitude').value = '';
+  document.getElementById('longitude').value = '';
+  document.getElementById('location').value = '';
+});
+mapModeLabel.after(resetBtn);
+
+document.getElementById("use-location").addEventListener("click", () => {
+  mapOptions.style.display = "none";
+  mapContainer.style.display = "block";
+  map.dragging.disable();
+  map.scrollWheelZoom.disable();
+  map.doubleClickZoom.disable();
+  map.boxZoom.disable();
+  map.keyboard.disable();
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        map.setView([lat, lng], 14);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+        document.getElementById('latitude').value = lat.toFixed(6);
+        document.getElementById('longitude').value = lng.toFixed(6);
+        reverseGeocode(lat, lng);
+        mapModeLabel.textContent = "📍 Using Current Location";
+      },
+      function () {
+        alert("Unable to access your location. You can still select from map.");
+        document.getElementById("select-on-map").click();
+      }
+    );
+  } else {
+    alert("Geolocation is not supported by your browser. Please select from map.");
+    document.getElementById("select-on-map").click();
+  }
+});
+
+document.getElementById("select-on-map").addEventListener("click", () => {
+  mapOptions.style.display = "none";
+  mapContainer.style.display = "block";
+  map.dragging.enable();
+  map.scrollWheelZoom.enable();
+  map.doubleClickZoom.enable();
+  map.boxZoom.enable();
+  map.keyboard.enable();
+  mapModeLabel.textContent = "🗺️ Selected from Map";
+});
+
 function reverseGeocode(lat, lng) {
   const spinner = document.getElementById("spinner");
   spinner.classList.remove("hidden");
@@ -154,7 +112,6 @@ function reverseGeocode(lat, lng) {
     .then(res => res.json())
     .then(data => {
       spinner.classList.add("hidden");
-      console.log("Reverse geocode response:", data);
       if (data.Route_Info) {
         const route = data.Route_Info.Route_Name || '';
         const mile = data.Route_Info.Milepoint?.toFixed(2) || '';
@@ -169,9 +126,6 @@ function reverseGeocode(lat, lng) {
       console.error("Reverse geocode error:", error);
     });
 }
-
-// Auto-test with known good coordinate
-reverseGeocode(37.955306, -84.539666);
 
 let marker;
 map.on('click', function (e) {
@@ -246,13 +200,17 @@ document.getElementById("potholeForm").addEventListener("submit", function (e) {
   const locationError = document.getElementById("location-error");
 
   if (!locationField.checkValidity()) {
-    locationError.textContent = "Please provide a location.";
-    locationError.style.display = "block";
+    if (locationError) {
+      locationError.textContent = "Please provide a location.";
+      locationError.style.display = "block";
+    }
     locationField.focus();
     return;
   } else {
-    locationError.textContent = "";
-    locationError.style.display = "none";
+    if (locationError) {
+      locationError.textContent = "";
+      locationError.style.display = "none";
+    }
   }
 
   const county = document.getElementById("county").value;
