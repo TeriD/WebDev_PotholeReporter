@@ -95,6 +95,15 @@ label {
   white-space: nowrap;
 }
 
+#reset-location-fallback {
+  margin-top: 15px;
+  background-color: red;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+}
+
 input,
 select,
 textarea {
@@ -250,4 +259,18 @@ button {
   .flex-row {
     flex-direction: column;
   }
+
+    .fade-hint {
+      display: block;
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 5px;
+      opacity: 1;
+      transition: opacity 1.5s ease-out;
+    }
+
+    .fade-hint.hidden {
+      display: none;
+      opacity: 0;
+    }
 }

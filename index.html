@@ -62,7 +62,7 @@
             </div>
 
             <!-- Map Section -->
-            <div class="form-group" id="map-container" style="display: none;">
+            <div id="map-container" style="display: none;">
                 <p id="map-mode-label"></p>
                 <label class="hint">Click on the map below to populate Latitude and Longitude:</label>
                 <div class="latlon-group">
@@ -76,12 +76,20 @@
                     </div>
                 </div>
                 <div id="map"></div>
+
+                <!-- Add this reset button here -->
+                <button type="button" id="reset-location-fallback" class="hidden" title="Reset and choose a new location method">
+                    🔁 Reset Location
+                </button>
             </div>
 
             <!-- Location field -->
             <div class="form-group">
                 <label for="location">Location (Street Address or Description)</label>
                 <input type="text" id="location" required />
+                <span id="location-hint" class="fade-hint hidden">
+                    🛈 Tip: You can describe the location manually (e.g., “Nicholasville Rd southbound...”)
+                </span>
                 <span id="location-error" class="error-message"></span>
                 <div id="spinner" class="spinner hidden"></div>
             </div>
