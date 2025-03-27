@@ -97,6 +97,10 @@ textarea {
   width: 100%;
 }
 
+#county-list li.highlighted {
+  background-color: #cce5ff;
+}
+
 #map {
   height: 300px;
   width: 100%;
