@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +8,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
-
 <body>
     <div class="container">
         <div class="form-header">
@@ -17,115 +15,70 @@
                 <h2>Report a Pothole</h2>
             </div>
             <div class="header-right">
-                <img src="logos/BG_GeoAnalytics_LLC.png" alt="BG GeoAnalytics Logo" class="logo" />
+                <img src="logos/BG_GeoAnalytics_LLC.jpg" alt="Logo" class="logo" />
             </div>
         </div>
 
         <form id="potholeForm">
-            <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" required />
-            </div>
+            <label for="name">Your Name</label>
+            <input type="text" id="name" required />
 
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" required />
-            </div>
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required />
 
             <!-- County + District -->
-            <div class="form-group flex-row">
-                <div class="county-district">
-                    <label for="county">County</label>
-                    <div class="county-search">
-                        <input type="text" id="county" name="county" placeholder="Start typing a county..." autocomplete="off"
-                            required />
-                        <ul id="county-list" class="dropdown hidden"></ul>
-                    </div>
+            <div class="county-district-group">
+            <div>
+                <label for="county">County</label>
+                <div class="county-search">
+                <input type="text" id="county" name="county" placeholder="Start typing a county..." autocomplete="off" required />
+                <ul id="county-list" class="dropdown hidden"></ul>
+            </div>
+
+                        </div>
+            <div>
+                <label for="district">KYTC District</label>
+                <input type="text" id="district" readonly />
+            </div>
+        </div>
+
+            <label class="hint">Click on the map to populate Latitude, Longitude, and Location:</label>
+            <div id="map"></div>
+
+            <div class="latlon-group">
+                <div>
+                    <label for="latitude">Latitude</label>
+                    <input type="text" id="latitude" name="latitude" placeholder="Click map to autofill" readonly />
                 </div>
-                <div class="county-district">
-                    <label for="district">KYTC District</label>
-                    <input type="text" id="district" readonly />
-                </div>
-            </div>
-
-            <!-- Location Input Method -->
-            <div class="form-group" id="map-options">
-                <p><strong>Select Location Input Method:</strong></p>
-                <div class="location-buttons">
-                    <button type="button" id="use-location" title="Automatically use your current GPS location">📍 Use My
-                        Location</button>
-                    <button type="button" id="select-on-map" title="Manually click a spot on the map to set the location">🗺️ Select
-                        on Map</button>
-                    <button type="button" id="reset-location-method"
-                        title="Clear selected location and choose a different method">🔄 Reset</button>
-                </div>
-            </div>
-
-            <!-- Map Section -->
-            <div id="map-container" style="display: none;">
-                <p id="map-mode-label"></p>
-                <label class="hint">Click on the map below to populate Latitude and Longitude:</label>
-                <div class="latlon-group">
-                    <div>
-                        <label for="latitude">Latitude</label>
-                        <input type="text" id="latitude" name="latitude" readonly />
-                    </div>
-                    <div>
-                        <label for="longitude">Longitude</label>
-                        <input type="text" id="longitude" name="longitude" readonly />
-                    </div>
-                </div>
-                <div id="map"></div>
-
-                <!-- Add this reset button here -->
-                <button type="button" id="reset-location-fallback" class="hidden" title="Reset and choose a new location method">
-                    🔁 Reset Location
-                </button>
-            </div>
-
-            <!-- Location field -->
-            <div class="form-group">
-                <label for="location">Location (Street Address or Description)</label>
-                <input type="text" id="location" required />
-                <span id="location-hint" class="fade-hint hidden">
-                    🛈 Tip: You can describe the location manually (e.g., “Nicholasville Rd southbound...”)
-                </span>
-                <span id="location-error" class="error-message"></span>
-                <div id="spinner" class="spinner hidden"></div>
-            </div>
-
-            <!-- Additional Details -->
-            <div class="form-group">
-                <label for="description">
-                    Additional Details
-                    <span class="hint-inline">(Please be as specific as possible.)</span>
-                </label>
-                <textarea id="description" rows="4"></textarea>
-            </div>
-
-            <!-- Severity -->
-            <div class="form-group">
-                <label>Severity</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="severity" value="Low" checked /> Low</label>
-                    <label><input type="radio" name="severity" value="Moderate" /> Moderate</label>
-                    <label><input type="radio" name="severity" value="Severe" /> Severe</label>
+                <div>
+                    <label for="longitude">Longitude</label>
+                    <input type="text" id="longitude" name="longitude" placeholder="Click map to autofill" readonly />
                 </div>
             </div>
 
-            <!-- Upload Photo -->
-            <div class="form-group">
-                <label for="photo">Upload a Photo (optional)</label>
-                <input type="file" id="photo" accept="image/*" />
-                <div id="preview-container">
-                    <img id="preview-image" src="" alt="Image Preview" />
-                </div>
+            <label for="location">Location (Street Address or Description)</label>
+            <input type="text" id="location" required />
+            <span id=""location-error" class=""error-message"></span>
+
+            <label for="photo">Upload a Photo (optional)</label>
+            <input type="file" id="photo" accept="image/*" />
+            <div id="preview-container">
+                <img id="preview-image" src="" alt="Image Preview" />
             </div>
 
-            <!-- Submit -->
-            <div class="form-group">
-                <button type="submit">Submit Report</button>
+            <label for="description">
+                Additional Details <span class="hint-inline">(Please be as specific as possible.)</span>
+            </label>
+            <textarea id="description" rows="4"></textarea>
+
+            <label>Severity</label>
+            <div class="radio-group">
+                <label><input type="radio" name="severity" value="Low" required checked /> Low</label>
+                <label><input type="radio" name="severity" value="Moderate" /> Moderate</label>
+                <label><input type="radio" name="severity" value="Severe" /> Severe</label>
             </div>
+
+            <button type="submit">Submit Report</button>
         </form>
 
         <div id="summary"></div>
@@ -133,5 +86,4 @@
 
     <script src="js/script.js"></script>
 </body>
-
 </html>

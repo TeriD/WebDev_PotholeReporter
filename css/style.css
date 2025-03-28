@@ -1,29 +1,5 @@
-/* === NEW for cleaner layout === */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-}
 
-.flex-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.county-district {
-  flex: 1 1 48%;
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-item {
-  flex: 1 1 50%;
-  min-width: 0;
-}
-
-/* Existing styles — keep these */
+/* Reset styles & base setup */
 * {
   box-sizing: border-box;
 }
@@ -37,6 +13,7 @@ body {
   justify-content: center;
 }
 
+/* Outer wrapper (white card style) */
 .container {
   background-color: white;
   width: 100%;
@@ -46,6 +23,14 @@ body {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Section layout using flexbox */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Header with title + logo */
 .form-header {
   display: flex;
   justify-content: space-between;
@@ -64,11 +49,30 @@ body {
   width: auto;
 }
 
+/* Labels and inputs */
 label {
   font-weight: bold;
 }
 
+input,
+select,
+textarea {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+}
+
+form > label:first-of-type {
+  font-weight: normal;
+  font-style: italic;
+  color: #555;
+  margin-top: 10px;
+}
+
 .hint {
+  display: block;
   font-size: 0.9em;
   font-style: italic;
   color: #555;
@@ -84,46 +88,15 @@ label {
   margin-left: 8px;
 }
 
-.location-buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.location-buttons button {
-  flex: 1 1 30%;
-  white-space: nowrap;
-}
-
-#reset-location-fallback {
-  margin-top: 15px;
-  background-color: red;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-}
-
-input,
-select,
-textarea {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  width: 100%;
-}
-
-#county-list li.highlighted {
-  background-color: #cce5ff;
-}
-
+/* Map and preview */
 #map {
   height: 300px;
   width: 100%;
   margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  position: relative; /* ensures stacking context */
+  z-index: 1;
 }
 
 #preview-container {
@@ -139,6 +112,22 @@ textarea {
   margin-top: 10px;
 }
 
+/* Lat/Lon flex */
+.latlon-group,
+.county-district-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.latlon-group > div,
+.county-district-group > div {
+  flex: 1 1 48%;
+  min-width: 140px;
+}
+
+/* Dropdown */
 .county-search {
   position: relative;
 }
@@ -153,10 +142,12 @@ textarea {
   border-top: none;
   max-height: 150px;
   overflow-y: auto;
-  z-index: 1000;
+  list-style: none;
   padding: 0;
   margin: 0;
-  list-style: none;
+
+  z-index: 2000;
+  /* 👈 raise above map controls */
 }
 
 #county-list li {
@@ -168,20 +159,26 @@ textarea {
   background-color: #eee;
 }
 
+.hidden {
+  display: none;
+}
+
+.error-message {
+  font-size: 0.85em;
+  color: red;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  display: none;
+}
+
 .radio-group {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
 }
 
-.latlon-group {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.latlon-group>div {
-  flex: 1 1 45%;
+.radio-group label {
+  font-weight: normal;
 }
 
 button {
@@ -194,54 +191,23 @@ button {
   cursor: pointer;
 }
 
-/* Spinner Styles */
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #228B22;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  animation: spin 1s linear infinite;
-  margin: 10px auto;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.hidden {
-  display: none;
-}
-
-#error-message {
-  color: red;
-  font-size: 0.9em;
-}
-
+/* Summary Output */
 #summary {
   display: none;
+  /* 🔒 Hide it initially */
   margin-top: 30px;
   background-color: #f0fdf0;
   padding: 20px;
   border-left: 5px solid #228B22;
 }
 
-@media (max-width: 450px) {
+/* Mobile tweaks */
+@media (max-width: 600px) {
   .form-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
     padding: 0 20px;
-  }
-
-  .container {
-    padding: 20px;
   }
 
   button {
@@ -251,26 +217,10 @@ button {
   .radio-group {
     flex-direction: column;
   }
+}
 
-  .latlon-group {
+@media (max-width: 400px) {
+  .county-district-group {
     flex-direction: column;
   }
-
-  .flex-row {
-    flex-direction: column;
-  }
-
-    .fade-hint {
-      display: block;
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 5px;
-      opacity: 1;
-      transition: opacity 1.5s ease-out;
-    }
-
-    .fade-hint.hidden {
-      display: none;
-      opacity: 0;
-    }
 }
