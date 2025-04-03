@@ -105,6 +105,8 @@ function reverseGeocode(lat, lng) {
     });
 }
 
+let marker;
+
 map.on('click', function (e) {
   const { lat, lng } = e.latlng;
   document.getElementById('latitude').value = lat.toFixed(6);
@@ -116,31 +118,22 @@ map.on('click', function (e) {
 
 const countyInputField = document.getElementById("county");
 const countyDropdown = document.getElementById("county-list");
-let highlightedIndex = -1;
 
 countyInputField.addEventListener("input", function () {
   const value = this.value.trim().toLowerCase();
   countyDropdown.innerHTML = "";
-  highlightedIndex = -1;
-
   if (!value || counties.length === 0) {
     countyDropdown.classList.add("hidden");
     return;
   }
-
   const filtered = counties.filter(c => c.toLowerCase().startsWith(value));
   if (filtered.length === 0) {
     countyDropdown.classList.add("hidden");
     return;
   }
-
-  filtered.forEach((county, index) => {
+  filtered.forEach(county => {
     const li = document.createElement("li");
     li.textContent = county;
-    if (index === 0) {
-      li.classList.add("highlighted");
-      highlightedIndex = 0;
-    }
     li.addEventListener("click", () => {
       countyInputField.value = county;
       countyDropdown.classList.add("hidden");
@@ -148,20 +141,7 @@ countyInputField.addEventListener("input", function () {
     });
     countyDropdown.appendChild(li);
   });
-
   countyDropdown.classList.remove("hidden");
-});
-
-countyInputField.addEventListener("keydown", function (e) {
-  if ((e.key === "Tab" || e.key === "Enter") && !countyDropdown.classList.contains("hidden")) {
-    const highlightedItem = countyDropdown.querySelector(".highlighted");
-    if (highlightedItem) {
-      e.preventDefault();
-      countyInputField.value = highlightedItem.textContent;
-      countyDropdown.classList.add("hidden");
-      zoomToCounty(highlightedItem.textContent);
-    }
-  }
 });
 
 document.addEventListener("click", function (e) {
@@ -169,4 +149,77 @@ document.addEventListener("click", function (e) {
     countyDropdown.classList.add("hidden");
   }
 });
+
+const photoInput = document.getElementById("photo");
+const previewContainer = document.getElementById("preview-container");
+const previewImage = document.getElementById("preview-image");
+
+photoInput.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewImage.src = e.target.result;
+      previewContainer.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewImage.src = "";
+    previewContainer.style.display = "none";
+  }
+});
+
+document.getElementById("potholeForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+
+  const locationField = document.getElementById("location");
+  const locationError = document.getElementById("location-error");
+
+  if (!locationField.checkValidity()) {
+    locationError.textContent = "Please provide a location.";
+    locationError.style.display = "block";
+    locationField.focus();
+    return;
+  } else {
+    locationError.textContent = "";
+    locationError.style.display = "none";
+  }
+const location = document.getElementById("location").value;
+  const county = document.getElementById("county").value;
+  const district = document.getElementById("district").value;
+  const description = document.getElementById("description").value;
+  const severity = document.querySelector("input[name='severity']:checked").value;
+
+  const summaryDiv = document.getElementById("summary");
+  summaryDiv.innerHTML = "";
+  summaryDiv.style.display = "block";
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Report Submitted";
+  summaryDiv.appendChild(heading);
+
+  const items = [
+    ["Name", name],
+    ["Email", email],
+    ["Location", location],
+    ["County", county],
+    ["District", district],
+    ["Severity", severity],
+    ["Description", description || "N/A"]
+  ];
+
+  items.forEach(([label, value]) => {
+    const p = document.createElement("p");
+    const strong = document.createElement("strong");
+    strong.textContent = `${label}: `;
+    p.appendChild(strong);
+    p.appendChild(document.createTextNode(value));
+    summaryDiv.appendChild(p);
+  });
+
+  document.getElementById("potholeForm").reset();
+});
+
 
