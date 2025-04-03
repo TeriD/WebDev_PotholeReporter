@@ -136,43 +136,41 @@ function reverseGeocode(lat, lng) {
   console.log("🔍 Fetching from:", url);
 
   fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      spinner.classList.add("hidden");
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
+  .then(data => {
+    console.log("✅ Data received:", data);
 
-      const props = data.Route_Info?.properties;
-      const routeId = props?.Route_Unique_Identifier;
-      const mile = props?.Milepoint;
+    const props = data.Route_Info?.properties;
+    const routeId = props?.Route_Unique_Identifier;
+    const mile = props?.Milepoint;
 
-      if (routeId && mile != null) {
-        locationField.value = `${routeId} @ ${mile.toFixed(3)}`;
-        locationField.dispatchEvent(new Event("input", { bubbles: true }));
-        locationField.setCustomValidity("");
-        resetFallback.classList.add("hidden");
-        locationHint.classList.add("hidden");
-      } else {
-        alert("⚠️ Route could not be determined. Please enter manually.");
-        locationField.value = "No location returned — please enter manually";
-        locationField.removeAttribute("readonly");
-        locationField.focus();
-        locationField.setCustomValidity("Please describe the location.");
-        resetFallback.classList.remove("hidden");
-        locationHint.classList.remove("hidden");
-        setTimeout(() => (locationHint.style.opacity = "0"), 6000);
-      }
-    })
-    .catch(error => {
-      console.error("Reverse geocode error:", error);
-      spinner.classList.add("hidden");
-      alert("⚠️ Reverse geocoding failed. Please enter location manually.");
-      locationField.value = "Reverse geocode failed. Please enter manually.";
-      locationField.removeAttribute("readonly");
-      locationField.focus();
-      locationField.setCustomValidity("Please describe the location.");
-      resetFallback.classList.remove("hidden");
-      locationHint.classList.remove("hidden");
-      setTimeout(() => (locationHint.style.opacity = "0"), 6000);
-    });
+    if (routeId && mile != null) {
+      locationField.value = `${routeId} @ ${mile.toFixed(3)}`;
+      locationField.dispatchEvent(new Event("input", { bubbles: true }));
+      locationField.setCustomValidity("");
+      resetFallback.classList.add("hidden");
+      locationHint.classList.add("hidden");
+    } else {
+      throw new Error("Missing Route ID or Milepoint");
+    }
+  })
+  .catch(error => {
+    console.error("❌ Reverse geocode error:", error);
+    spinner.classList.add("hidden");
+    alert("⚠️ Reverse geocoding failed. Please enter location manually.");
+    locationField.value = "Reverse geocode failed. Please enter manually.";
+    locationField.removeAttribute("readonly");
+    locationField.focus();
+    locationField.setCustomValidity("Please describe the location.");
+    resetFallback.classList.remove("hidden");
+    locationHint.classList.remove("hidden");
+    setTimeout(() => (locationHint.style.opacity = "0"), 6000);
+  });
 }
 
 map.on("click", function (e) {
