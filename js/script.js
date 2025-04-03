@@ -132,19 +132,7 @@ function reverseGeocode(lat, lng) {
 
   spinner.classList.remove("hidden");
 
-  /*
-  const baseUrl = 'https://kytc-api-v100-lts-qrntk7e3ra-uc.a.run.app/api/route/GetRouteInfoByCoordinates';
-  const url = `https://corsproxy.io/?${encodeURIComponent(
-    `${baseUrl}?xcoord=${lng}&ycoord=${lat}&snap_distance=250&return_m=True&input_epsg=4326&return_multiple=False&return_format=geojson&request_id=100`
-  )}`;*/
-
-  // Check if lat and lng are valid numbers
-  console.log("🧭 lat:", lat, "lng:", lng);
-
-  // Use the proxy server to avoid CORS issues
   const url = `https://kytcapi-proxy.onrender.com/routeinfo?xcoord=${lng}&ycoord=${lat}`;
-
-  // URL check for debugging
   console.log("🔍 Fetching from:", url);
 
   fetch(url)
@@ -152,15 +140,16 @@ function reverseGeocode(lat, lng) {
     .then(data => {
       spinner.classList.add("hidden");
 
-      const routeInfo = data.Route_Info;
-      const route = routeInfo?.Route_Label;
-      const mile = routeInfo?.Milepoint;
+      const props = data.Route_Info?.properties;
+      const routeId = props?.Route_Unique_Identifier;
+      const mile = props?.Milepoint;
 
-      if (route && mile != null) {
-        locationField.value = `${route} @ ${parseFloat(mile).toFixed(3)}`;
-        locationField.setCustomValidity("");
+      if (routeId && mile != null) {
+        locationField.value = `${routeId} @ ${mile.toFixed(3)}`;
         locationField.dispatchEvent(new Event("input", { bubbles: true }));
+        locationField.setCustomValidity("");
         resetFallback.classList.add("hidden");
+        locationHint.classList.add("hidden");
       } else {
         alert("⚠️ Route could not be determined. Please enter manually.");
         locationField.value = "No location returned — please enter manually";
@@ -172,8 +161,8 @@ function reverseGeocode(lat, lng) {
         setTimeout(() => (locationHint.style.opacity = "0"), 6000);
       }
     })
-    .catch(err => {
-      console.error("Reverse geocode error:", err);
+    .catch(error => {
+      console.error("Reverse geocode error:", error);
       spinner.classList.add("hidden");
       alert("⚠️ Reverse geocoding failed. Please enter location manually.");
       locationField.value = "Reverse geocode failed. Please enter manually.";
