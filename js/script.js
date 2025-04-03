@@ -67,7 +67,7 @@ function reverseGeocode(lat, lng) {
   const locationHint = document.getElementById("location-hint");
 
   spinner.classList.remove("hidden");
-  const url = `https://kypothole-proxy-simple.teridowdy.repl.co/routeinfo?xcoord=${lng}&ycoord=${lat}`;
+  const url = `https://kytcapi-proxy.onrender.com/routeinfo?xcoord=${lng}&ycoord=${lat}`;
 
   fetch(url)
     .then(res => res.json())
