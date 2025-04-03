@@ -113,3 +113,60 @@ map.on('click', function (e) {
   marker = L.marker([lat, lng]).addTo(map);
   reverseGeocode(lat, lng);
 });
+
+const countyInputField = document.getElementById("county");
+const countyDropdown = document.getElementById("county-list");
+let highlightedIndex = -1;
+
+countyInputField.addEventListener("input", function () {
+  const value = this.value.trim().toLowerCase();
+  countyDropdown.innerHTML = "";
+  highlightedIndex = -1;
+
+  if (!value || counties.length === 0) {
+    countyDropdown.classList.add("hidden");
+    return;
+  }
+
+  const filtered = counties.filter(c => c.toLowerCase().startsWith(value));
+  if (filtered.length === 0) {
+    countyDropdown.classList.add("hidden");
+    return;
+  }
+
+  filtered.forEach((county, index) => {
+    const li = document.createElement("li");
+    li.textContent = county;
+    if (index === 0) {
+      li.classList.add("highlighted");
+      highlightedIndex = 0;
+    }
+    li.addEventListener("click", () => {
+      countyInputField.value = county;
+      countyDropdown.classList.add("hidden");
+      zoomToCounty(county);
+    });
+    countyDropdown.appendChild(li);
+  });
+
+  countyDropdown.classList.remove("hidden");
+});
+
+countyInputField.addEventListener("keydown", function (e) {
+  if ((e.key === "Tab" || e.key === "Enter") && !countyDropdown.classList.contains("hidden")) {
+    const highlightedItem = countyDropdown.querySelector(".highlighted");
+    if (highlightedItem) {
+      e.preventDefault();
+      countyInputField.value = highlightedItem.textContent;
+      countyDropdown.classList.add("hidden");
+      zoomToCounty(highlightedItem.textContent);
+    }
+  }
+});
+
+document.addEventListener("click", function (e) {
+  if (!document.querySelector(".county-search").contains(e.target)) {
+    countyDropdown.classList.add("hidden");
+  }
+});
+
