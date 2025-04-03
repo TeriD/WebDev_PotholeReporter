@@ -143,22 +143,23 @@ function reverseGeocode(lat, lng) {
     return res.json();
   })
   .then(data => {
-    console.log("✅ Data received:", data);
+  console.log("✅ Full proxy response:", data);
+  console.log("📦 Extracted properties:", data.Route_Info?.properties);
 
-    const props = data.Route_Info?.properties;
-    const routeId = props?.Route_Unique_Identifier;
-    const mile = props?.Milepoint;
+  const props = data.Route_Info?.properties;
+  const route = props?.Route_Unique_Identifier;
+  const mile = props?.Milepoint;
 
-    if (routeId && mile != null) {
-      locationField.value = `${routeId} @ ${mile.toFixed(3)}`;
-      locationField.dispatchEvent(new Event("input", { bubbles: true }));
-      locationField.setCustomValidity("");
-      resetFallback.classList.add("hidden");
-      locationHint.classList.add("hidden");
-    } else {
-      throw new Error("Missing Route ID or Milepoint");
-    }
-  })
+  if (route && mile != null) {
+    locationField.value = `${route} @ ${mile.toFixed(3)}`;
+    locationField.dispatchEvent(new Event("input", { bubbles: true }));
+    locationField.setCustomValidity("");
+    resetFallback.classList.add("hidden");
+    locationHint.classList.add("hidden");
+  } else {
+    throw new Error("Missing Route_Unique_Identifier or Milepoint in proxy response");
+  }
+})
   .catch(error => {
     console.error("❌ Reverse geocode error:", error);
     spinner.classList.add("hidden");
