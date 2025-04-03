@@ -105,8 +105,6 @@ function reverseGeocode(lat, lng) {
     });
 }
 
-let marker;
-
 map.on('click', function (e) {
   const { lat, lng } = e.latlng;
   document.getElementById('latitude').value = lat.toFixed(6);
