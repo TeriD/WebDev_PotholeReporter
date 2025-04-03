@@ -107,6 +107,11 @@ document.getElementById("use-location").addEventListener("click", () => {
   }
 });
 
+// Event listener for selecting a location on the map
+// This allows users to click on the map to select a location
+// It enables map interactions and sets the map mode label accordingly
+// It also handles the case where the user has already selected a location
+// and wants to change it
 document.getElementById("select-on-map").addEventListener("click", () => {
   mapOptions.style.display = "none";
   mapContainer.style.display = "block";
@@ -124,6 +129,14 @@ document.getElementById("select-on-map").addEventListener("click", () => {
   setTimeout(() => map.invalidateSize(), 100);
 });
 
+// Reverse geocoding function to get the RT-Unique Identifier and Milepoint
+// from the clicked location
+// This function uses the KYTC API to fetch the route information
+// based on latitude and longitude coordinates
+// It updates the location input field with the fetched data
+// If the fetch fails, it alerts the user and allows manual input
+// It also handles the spinner and reset fallback button visibility
+// The function is called when the map is clicked
 function reverseGeocode(lat, lng) {
   const spinner = document.getElementById("spinner");
   const locationField = document.getElementById("location");
@@ -131,47 +144,52 @@ function reverseGeocode(lat, lng) {
   const locationHint = document.getElementById("location-hint");
 
   spinner.classList.remove("hidden");
-
+  // Set the spinner to visible
+  //
   const url = `https://kytcapi-proxy.onrender.com/routeinfo?xcoord=${lng}&ycoord=${lat}`;
   console.log("🔍 Fetching from:", url);
 
   fetch(url)
-  .then(res => {
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    return res.json();
-  })
-  .then(data => {
-  console.log("✅ Full proxy response:", data);
-  console.log("📦 Extracted properties:", data.Route_Info?.properties);
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      spinner.classList.add("hidden");  // ✅ Ensure spinner stops in success path
+      console.log("✅ Full proxy response:", data);
+      console.log("📦 Extracted properties:", data.Route_Info?.properties);
 
-  const props = data.Route_Info?.properties;
-  const route = props?.Route_Unique_Identifier;
-  const mile = props?.Milepoint;
+      // Set the properties to be returned
+      const props = data.Route_Info?.properties;
+      const route = props?.Route_Unique_Identifier;
+      const mile = props?.Milepoint;
 
-  if (route && mile != null) {
-    locationField.value = `${route} @ ${mile.toFixed(3)}`;
-    locationField.dispatchEvent(new Event("input", { bubbles: true }));
-    locationField.setCustomValidity("");
-    resetFallback.classList.add("hidden");
-    locationHint.classList.add("hidden");
-  } else {
-    throw new Error("Missing Route_Unique_Identifier or Milepoint in proxy response");
-  }
-})
-  .catch(error => {
-    console.error("❌ Reverse geocode error:", error);
-    spinner.classList.add("hidden");
-    alert("⚠️ Reverse geocoding failed. Please enter location manually.");
-    locationField.value = "Reverse geocode failed. Please enter manually.";
-    locationField.removeAttribute("readonly");
-    locationField.focus();
-    locationField.setCustomValidity("Please describe the location.");
-    resetFallback.classList.remove("hidden");
-    locationHint.classList.remove("hidden");
-    setTimeout(() => (locationHint.style.opacity = "0"), 6000);
-  });
+      // Check if route and mile are valid
+      if (route && mile != null) {
+        locationField.value = `${route} @ ${mile.toFixed(3)}`;
+        locationField.dispatchEvent(new Event("input", { bubbles: true }));
+        locationField.setCustomValidity("");
+        resetFallback.classList.add("hidden");
+        locationHint.classList.add("hidden");
+      } else {
+        throw new Error("Missing Route ID or Milepoint");
+      }
+    })
+    // Handle errors in the fetch request
+    .catch(error => {
+      console.error("❌ Reverse geocode error:", error);
+      spinner.classList.add("hidden");  // ✅ Ensure spinner stops in error path
+      alert("⚠️ Reverse geocoding failed. Please enter location manually.");
+      locationField.value = "Reverse geocode failed. Please enter manually.";
+      locationField.removeAttribute("readonly");
+      locationField.focus();
+      locationField.setCustomValidity("Please describe the location.");
+      resetFallback.classList.remove("hidden");
+      locationHint.classList.remove("hidden");
+      setTimeout(() => (locationHint.style.opacity = "0"), 6000);
+    });
 }
 
 map.on("click", function (e) {
